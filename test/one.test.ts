@@ -1,8 +1,9 @@
-import { example } from "../src";
+import { getDocs } from "../src";
 
 describe('Name of the group', () => {
     it('should ', async () => {
-        const tester = await example()
-        expect(tester[0]).toEqual('Name of the group example yay')
+        // TODO rename function and pass in the file name
+        const tester = await getDocs("./test/two.test.ts")
+        expect(tester[0]).toEqual('Name of the group example yay2')
     });
 });

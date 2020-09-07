@@ -20,12 +20,12 @@ const getDescribeText = (statement: Statement):string => {
   return stringLiteral.value
 }
 
-const example = async (): Promise<DocResult> => {
-  const fileData = await promises.readFile("./test/two.test.ts");
+const getDocs = async (filePath: string): Promise<DocResult> => {
+  const fileData = await promises.readFile(filePath);
 
   const parsed = parse(fileData.toString());
   const describeExpressions = parsed.program.body.filter(getExpressions) as Statement[];
   return describeExpressions.map(getDescribeText);
 };
 
-export { example };
+export { getDocs };
