@@ -1,4 +1,4 @@
-import { getDocs } from "../src";
+import { getDocs } from "../src/docBuilder";
 
 describe('Name of the group', () => {
     it('should ', async () => {
