@@ -16,7 +16,7 @@ export type DocResult = {
 
 type Describe = {
   name: string;
-  it: It;
+  its: It[];
 };
 
 type It = {
@@ -52,9 +52,9 @@ const getDescribeText = (
     ...docResult,
     describe: {
       name: stringValue,
-      it: {
+      its: [{
         name: itValue
-      }
+      }]
     },
   } as DocResult;
 };
@@ -69,9 +69,9 @@ const getDocs = async (filePath: string): Promise<DocResult> => {
     fileName: filePath,
     describe: {
       name: "describe name",
-      it: {
+      its: [{
         name: "it name",
-      },
+      }],
     },
   });
 };
