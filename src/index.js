@@ -5,6 +5,6 @@ console.log("Welcome to jest docs");
 // console.log(docBuilder.getDocs);
 
 
-docBuilder.getDocs("./test/two.test.ts").then(result => {
-    console.log(result[0])
+docBuilder.getDocs("./mockTests/oneDescribe.test.ts").then(result => {
+    console.log(JSON.stringify(result))
 });
