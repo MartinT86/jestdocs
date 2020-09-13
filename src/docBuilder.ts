@@ -11,7 +11,7 @@ import {
 
 export type DocResult = {
   fileName: string;
-  describe: Describe;
+  describes: Describe[];
 };
 
 type Describe = {
@@ -60,10 +60,10 @@ const getDescribeText = (
 
   return {
     ...docResult,
-    describe: {
+    describes: [{
       name: stringValue,
       its: itValues
-    },
+    }],
   } as DocResult;
 };
 
@@ -75,12 +75,12 @@ const getDocs = async (filePath: string): Promise<DocResult> => {
   ) as Statement[];
   return describeExpressions.reduce<DocResult>(getDescribeText, {
     fileName: filePath,
-    describe: {
+    describes: [{
       name: "describe name",
       its: [{
         name: "it name",
       }],
-    },
+    }],
   });
 };
 
