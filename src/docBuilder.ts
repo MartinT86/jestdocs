@@ -60,7 +60,7 @@ const getDescribeText = (
 
   return {
     ...docResult,
-    describes: [{
+    describes: [...docResult.describes, {
       name: stringValue,
       its: itValues
     }],
@@ -75,12 +75,7 @@ const getDocs = async (filePath: string): Promise<DocResult> => {
   ) as Statement[];
   return describeExpressions.reduce<DocResult>(getDescribeText, {
     fileName: filePath,
-    describes: [{
-      name: "describe name",
-      its: [{
-        name: "it name",
-      }],
-    }],
+    describes: [],
   });
 };
 
