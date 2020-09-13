@@ -48,13 +48,21 @@ const getDescribeText = (
     .arguments[0] as StringLiteral)
     .value
 
+  //TODO map the it expressions to get the it string literals
+  const itExpressions = (((callExpression.arguments[1] as ArrowFunctionExpression)
+    .body as BlockStatement)
+    .body as ExpressionStatement[])
+
+  const itValues = itExpressions.map(exp => {
+    const expression = exp.expression as CallExpression
+    return { name: (expression.arguments[0] as StringLiteral).value }
+  })
+
   return {
     ...docResult,
     describe: {
       name: stringValue,
-      its: [{
-        name: itValue
-      }]
+      its: itValues
     },
   } as DocResult;
 };
