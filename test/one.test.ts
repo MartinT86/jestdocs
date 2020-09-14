@@ -6,6 +6,7 @@ describe('For a single describe and it', () => {
             fileName: './mockTests/oneDescribe.test.ts',
             describes: [{
                 name: 'Single describe',
+                describes: [],
                 its: [{
                     name: 'single it'
                 }]
@@ -22,6 +23,7 @@ describe('For a single describe and multiple it', () => {
             fileName: './mockTests/oneDescribe_twoIt.test.ts',
             describes: [{
                 name: 'Single describe',
+                describes: [],
                 its: [{
                     name: 'first it'
                 },
@@ -41,12 +43,14 @@ describe('For a multiple describe and multiple it', () => {
             fileName: './mockTests/twoDescribe_oneIts.test.ts',
             describes: [{
                 name: 'This is the first desc',
+                describes: [],
                 its: [{
                     name: 'the it for the first'
                 }]
             },
             {
                 name: 'This is the second desc',
+                describes: [],
                 its: [{
                     name: 'the it for the second'
                 }]
@@ -57,4 +61,23 @@ describe('For a multiple describe and multiple it', () => {
     });
 });
 
-// TODO nested describes
+describe('For nested describes', () => {
+    it('should show the nested describes and it', async () => {
+        const expected = {
+            fileName: './mockTests/nestedDescribe.test.ts',
+            describes: [{
+                name: 'This is the outer describe',
+                describes: [{
+                    name: 'This is the inner describe',
+                    describes: [],
+                    its: [{
+                        name: 'and this is the it'
+                    }]
+                }],
+                its: []
+            }]
+        } as DocResult
+        const actual = await getDocs("./mockTests/nestedDescribe.test.ts")
+        expect(actual).toEqual(expected)
+    });
+});

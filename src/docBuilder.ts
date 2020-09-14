@@ -16,7 +16,8 @@ export type DocResult = {
 
 type Describe = {
   name: string;
-  its: It[];
+  describes: Describe[]
+  its: It[]
 };
 
 type It = {
@@ -48,7 +49,6 @@ const getDescribeText = (
     .arguments[0] as StringLiteral)
     .value
 
-  //TODO map the it expressions to get the it string literals
   const itExpressions = (((callExpression.arguments[1] as ArrowFunctionExpression)
     .body as BlockStatement)
     .body as ExpressionStatement[])
@@ -62,7 +62,8 @@ const getDescribeText = (
     ...docResult,
     describes: [...docResult.describes, {
       name: stringValue,
-      its: itValues
+      its: itValues,
+      describes: []
     }],
   } as DocResult;
 };
