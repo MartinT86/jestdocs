@@ -6,7 +6,7 @@ import {
   CallExpression,
   StringLiteral,
   ArrowFunctionExpression,
-  BlockStatement,
+  BlockStatement, expressionStatement, Identifier
 } from "@babel/types";
 
 export type DocResult = {
@@ -32,6 +32,36 @@ const getExpressions = (statement: Statement) => {
     statement.expression.callee.name === "describe"
   );
 };
+
+const filterIts = (exp: ExpressionStatement) => {
+  const expression = exp.expression as CallExpression
+  const callee = (expression.callee as Identifier).name
+  return callee === 'it'
+}
+
+const getDescribeArray = (describeArray: Describe[], statement: Statement): Describe[] => {
+  const expressionStatement = statement as ExpressionStatement;
+  const callExpression = expressionStatement.expression as CallExpression;
+  const stringLiteral = callExpression.arguments[0] as StringLiteral;
+  const stringValue = stringLiteral.value;
+
+  const itExpressions = (((callExpression.arguments[1] as ArrowFunctionExpression)
+    .body as BlockStatement)
+    .body as ExpressionStatement[])
+
+  const itValues = itExpressions.filter(filterIts).map(exp => {
+    const expression = exp.expression as CallExpression
+    return { name: (expression.arguments[0] as StringLiteral).value }
+  })
+
+  const describe: Describe = {
+    name: stringValue,
+    describes: [],
+    its: itValues
+  }
+  return [...describeArray, describe]
+}
+
 
 const getDescribeText = (
   docResult: DocResult,
@@ -74,10 +104,20 @@ const getDocs = async (filePath: string): Promise<DocResult> => {
   const describeExpressions = parsed.program.body.filter(
     getExpressions
   ) as Statement[];
-  return describeExpressions.reduce<DocResult>(getDescribeText, {
+
+  const describes = describeExpressions.reduce<Describe[]>(getDescribeArray, [])
+
+  const result: DocResult = {
     fileName: filePath,
-    describes: [],
-  });
+    describes
+  }
+
+  return result
+
+  // return describeExpressions.reduce<DocResult>(getDescribeText, {
+  //   fileName: filePath,
+  //   describes: [],
+  // });
 };
 
 export { getDocs };
