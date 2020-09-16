@@ -34,9 +34,17 @@ const getExpressions = (statement: Statement) => {
 };
 
 const filterIts = (exp: ExpressionStatement) => {
+  return filterByType(exp, 'it')
+}
+
+const filterDescribes = (exp: ExpressionStatement) => {
+  return filterByType(exp, 'describe')
+}
+
+const filterByType = (exp: ExpressionStatement, type: string) => {
   const expression = exp.expression as CallExpression
   const callee = (expression.callee as Identifier).name
-  return callee === 'it'
+  return callee === type
 }
 
 const getDescribeArray = (describeArray: Describe[], statement: Statement): Describe[] => {
@@ -45,58 +53,24 @@ const getDescribeArray = (describeArray: Describe[], statement: Statement): Desc
   const stringLiteral = callExpression.arguments[0] as StringLiteral;
   const stringValue = stringLiteral.value;
 
-  const itExpressions = (((callExpression.arguments[1] as ArrowFunctionExpression)
+  const bodyExpressions = (((callExpression.arguments[1] as ArrowFunctionExpression)
     .body as BlockStatement)
     .body as ExpressionStatement[])
 
-  const itValues = itExpressions.filter(filterIts).map(exp => {
+  const describeValues = bodyExpressions.filter(filterDescribes).reduce<Describe[]>(getDescribeArray, [])
+
+  const itValues = bodyExpressions.filter(filterIts).map(exp => {
     const expression = exp.expression as CallExpression
     return { name: (expression.arguments[0] as StringLiteral).value }
   })
 
   const describe: Describe = {
     name: stringValue,
-    describes: [],
+    describes: describeValues,
     its: itValues
   }
   return [...describeArray, describe]
 }
-
-
-const getDescribeText = (
-  docResult: DocResult,
-  statement: Statement
-): DocResult => {
-  const expressionStatement = statement as ExpressionStatement;
-  const callExpression = expressionStatement.expression as CallExpression;
-  const stringLiteral = callExpression.arguments[0] as StringLiteral;
-  const stringValue = stringLiteral.value;
-
-  const itValue = (((((callExpression.arguments[1] as ArrowFunctionExpression)
-    .body as BlockStatement)
-    .body[0] as ExpressionStatement)
-    .expression as CallExpression)
-    .arguments[0] as StringLiteral)
-    .value
-
-  const itExpressions = (((callExpression.arguments[1] as ArrowFunctionExpression)
-    .body as BlockStatement)
-    .body as ExpressionStatement[])
-
-  const itValues = itExpressions.map(exp => {
-    const expression = exp.expression as CallExpression
-    return { name: (expression.arguments[0] as StringLiteral).value }
-  })
-
-  return {
-    ...docResult,
-    describes: [...docResult.describes, {
-      name: stringValue,
-      its: itValues,
-      describes: []
-    }],
-  } as DocResult;
-};
 
 const getDocs = async (filePath: string): Promise<DocResult> => {
   const fileData = await promises.readFile(filePath);
@@ -113,11 +87,6 @@ const getDocs = async (filePath: string): Promise<DocResult> => {
   }
 
   return result
-
-  // return describeExpressions.reduce<DocResult>(getDescribeText, {
-  //   fileName: filePath,
-  //   describes: [],
-  // });
 };
 
 export { getDocs };
