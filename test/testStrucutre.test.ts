@@ -82,4 +82,19 @@ describe('For nested describes', () => {
     });
 });
 
-// TODO filter out non jest code from test files
+describe('When tests use other functions', () => {
+    it('should not include the functions', async () => {
+        const expected = {
+            fileName: './mockTests/extraFunction.test.ts',
+            describes: [{
+                name: 'This is a describe',
+                describes: [],
+                its: [{
+                    name: 'This is an it'
+                }]
+            }]
+        } as DocResult
+        const actual = await getDocs("./mockTests/extraFunction.test.ts")
+        expect(actual).toEqual(expected)
+    });
+});
