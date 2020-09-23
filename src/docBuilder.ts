@@ -14,7 +14,7 @@ export type DocResult = {
   describes: Describe[];
 };
 
-type Describe = {
+export type Describe = {
   name: string;
   describes: Describe[]
   its: It[]
