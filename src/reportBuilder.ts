@@ -1,11 +1,14 @@
 import { Describe, DocResult } from "./docBuilder"
 
-export const reportBuilder = (projectName: string, docResult: DocResult) => {
+export const reportBuilder = (projectName: string, docResults: DocResult[]) => {
     const header = `<h1>${projectName}</h1>`
-    const body = buildLines(docResult.describes, '')
-    return header + body
+    const lines = docResults.map(doc => {
+        return buildLines(doc.describes, '')
+    })
+    return header + lines.join()
 }
 
+//TODO: buildlines seems to be duplicating
 const buildLines = (describes: Describe[], lines: string) => {
     describes.forEach(d => {
         lines += `<h3>${d.name}</h3>`

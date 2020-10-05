@@ -5,7 +5,7 @@ describe('Given a project name', () => {
     it('should output the name in the header', () => {
         const expected = '<h1>My project</h1>'
         const projectName = 'My project'
-        const docResult: DocResult = {
+        const docResult: DocResult[] = [{
             fileName: 'file',
             describes: [
                 {
@@ -14,7 +14,7 @@ describe('Given a project name', () => {
                     describes: []
                 }
             ]
-        }
+        }]
 
         const actual = reportBuilder(projectName, docResult)
 
@@ -25,7 +25,7 @@ describe('Given a project name', () => {
 describe('Given a describe', () => {
     it('should add it to the report', () => {
         // const expected = '<h3>Describe one</h3>'
-        const docResult: DocResult = {
+        const docResult: DocResult[] = [{
             fileName: 'file',
             describes: [
                 {
@@ -49,7 +49,7 @@ describe('Given a describe', () => {
                     describes: []
                 }
             ]
-        }
+        }]
 
         const actual = reportBuilder('project', docResult)
 

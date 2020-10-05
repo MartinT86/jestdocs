@@ -72,6 +72,7 @@ const getDescribeArray = (describeArray: Describe[], statement: Statement): Desc
   return [...describeArray, describe]
 }
 
+//TODO: need to handle 'test' not just 'it'
 const getDocs = async (filePath: string): Promise<DocResult> => {
   const fileData = await promises.readFile(filePath);
   const parsed = parse(fileData.toString(), { sourceFilename: filePath });

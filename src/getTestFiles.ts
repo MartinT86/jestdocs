@@ -13,7 +13,6 @@ const getFiles = async (globPattern: string): Promise<string[]> => {
                 console.log('glog error: ', er)
                 return reject(er)
             }
-            console.log('files: ', files)
             resolve(files)
         })
     })
