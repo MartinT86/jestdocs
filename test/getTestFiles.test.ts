@@ -4,6 +4,6 @@ describe('getTestFiles', () => {
     it('should get the file names', async () => {
         const files = await getTestFiles()
 
-        expect(files).toBeTruthy()
+        expect(files.length > 0).toBeTruthy()
     });
 });

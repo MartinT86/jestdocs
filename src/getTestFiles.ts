@@ -1,23 +1,20 @@
 var glob = require("glob")
 
+export const getTestFiles = async (): Promise<string[]> => {
+    const listOne = await getFiles("**/?(*.)+(spec|test).[jt]s?(x)")
+    const listTwo = await getFiles("**/__tests__/**/*.[jt]s?(x)")
+    return [...listOne, ...listTwo]
+}
 
-export const getTestFiles = () => {
+const getFiles = async (globPattern: string): Promise<string[]> => {
     return new Promise((resolve, reject) => {
-
-        // options is optional
-        glob( "**/?(*.)+(spec|test).[jt]s?(x)" , {realpath: true}, function (er: any, files: string[]) {
+        glob(globPattern, { realpath: true, ignore: ["**/node_modules/**"] }, function (er: any, files: string[]) {
             if (er) {
                 console.log('glog error: ', er)
                 return reject(er)
             }
             console.log('files: ', files)
             resolve(files)
-            // files is an array of filenames.
-            // If the `nonull` option is set, and nothing
-            // was found, then files is ["**/*.js"]
-            // er is an error object or null.
         })
-
     })
 }
-
