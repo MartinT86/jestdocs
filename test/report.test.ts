@@ -23,6 +23,26 @@ describe('Given a project name', () => {
 });
 
 describe('Given a describe', () => {
+    it('should not duplicate the lines', () => {
+        // const expected = '<h3>Describe one</h3>'
+        const docResult: DocResult[] = [{
+            fileName: 'file',
+            describes: [
+                {
+                    name: 'Describe one',
+                    its: [{
+                        name: 'It one'
+                    }],
+                    describes: []
+                }
+            ]
+        }]
+
+        const actual = reportBuilder('project', docResult)
+
+        expect(actual).toEqual('<h1>project</h1><h3>Describe one</h3><h4>It one</h4>')
+    });
+
     it('should add it to the report', () => {
         // const expected = '<h3>Describe one</h3>'
         const docResult: DocResult[] = [{

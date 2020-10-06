@@ -3,19 +3,20 @@ import { Describe, DocResult } from "./docBuilder"
 export const reportBuilder = (projectName: string, docResults: DocResult[]) => {
     const header = `<h1>${projectName}</h1>`
     const lines = docResults.map(doc => {
-        return buildLines(doc.describes, '')
+        return buildLines(doc.describes)
     })
     return header + lines.join()
 }
 
 //TODO: buildlines seems to be duplicating
-const buildLines = (describes: Describe[], lines: string) => {
+const buildLines = (describes: Describe[]) => {
+    let linesBlah = ''
     describes.forEach(d => {
-        lines += `<h3>${d.name}</h3>`
+        linesBlah += `<h3>${d.name}</h3>`
         d.its.forEach(i => {
-            lines += `<h4>${i.name}</h4>`
+            linesBlah += `<h4>${i.name}</h4>`
         })
-        lines += buildLines(d.describes, lines)
+        linesBlah += buildLines(d.describes)
     })
-    return lines
+    return linesBlah
 }
